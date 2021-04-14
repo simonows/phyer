@@ -7,7 +7,7 @@
 QTableViewModel::QTableViewModel(QObject *parent)
     :QAbstractListModel(parent)
 {
-    values = new QList<CountryFlag>();
+    values = new QList<RegisterFlag>();
 }
 
 int QTableViewModel::rowCount(const QModelIndex &) const
@@ -17,7 +17,7 @@ int QTableViewModel::rowCount(const QModelIndex &) const
 
 int QTableViewModel::columnCount(const QModelIndex &) const
 {
-    return 3;
+    return 4;
 }
 
 QVariant QTableViewModel::data( const QModelIndex &index, int role ) const
@@ -39,7 +39,11 @@ QVariant QTableViewModel::data( const QModelIndex &index, int role ) const
                         break;
                     }
                     case 2: {
-                        value = this->values->at(index.row()).getIcon();
+                        value = this->values->at(index.row()).getValue();
+                        break;
+                    }
+                    case 3: {
+                        value = this->values->at(index.row()).getEvalue();
                         break;
                     }
                 }
@@ -64,17 +68,19 @@ QVariant QTableViewModel::headerData(int section, Qt::Orientation orientation, i
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
         case 0:
-            return QString("ID");
+            return QString("address");
         case 1:
-            return QString("Name");
+            return QString("name");
         case 2:
-            return QString("Icon");
+            return QString("MII");
+        case 3:
+            return QString("GMII");
         }
     }
     return QVariant();
 }
 
-void QTableViewModel::populate(QList<CountryFlag> *newValues)
+void QTableViewModel::populate(QList<RegisterFlag> *newValues)
 {
     int idx = this->values->count();
     this->beginInsertRows(QModelIndex(), 1, idx);
@@ -82,7 +88,7 @@ void QTableViewModel::populate(QList<CountryFlag> *newValues)
     endInsertRows();
  }
 
-void QTableViewModel::append(CountryFlag value)
+void QTableViewModel::append(RegisterFlag value)
 {
     int newRow = this->values->count()+1;
 
@@ -91,7 +97,7 @@ void QTableViewModel::append(CountryFlag value)
     endInsertRows();
 }
 
-void QTableViewModel::update(int idx, CountryFlag value)
+void QTableViewModel::update(int idx, RegisterFlag value)
 {
     (*this->values)[idx] = value;
 
@@ -110,7 +116,7 @@ void QTableViewModel::deleteRow(int idx)
     this->endRemoveRows();
 }
 
-void QTableViewModel::insertAt(int idx, CountryFlag value)
+void QTableViewModel::insertAt(int idx, RegisterFlag value)
 {
 
     int newRow = idx;

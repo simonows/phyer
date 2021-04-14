@@ -1,7 +1,7 @@
 #ifndef __MAINWIN_H__
 #define __MAINWIN_H__
 
-#include <countryflag.h>
+#include <registerflag.h>
 #include <qtableviewmodel.h>
 
 #include <QMainWindow>
@@ -16,7 +16,7 @@ class MainWindow: public QMainWindow
     Q_OBJECT
 
     Ui::MainWindow *ui;
-    QList<CountryFlag> *values;
+    QList<RegisterFlag> *values;
     QTableViewModel *model;
     int newidx;
 

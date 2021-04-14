@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>360</width>
-    <height>385</height>
+    <width>911</width>
+    <height>429</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>PHY Register Set Editor</string>
@@ -19,7 +25,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>341</width>
+      <width>441</width>
       <height>291</height>
      </rect>
     </property>
@@ -27,7 +33,7 @@
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>182</x>
+      <x>242</x>
       <y>310</y>
       <width>71</width>
       <height>23</height>
@@ -40,7 +46,7 @@
    <widget class="QPushButton" name="pushButton_3">
     <property name="geometry">
      <rect>
-      <x>106</x>
+      <x>166</x>
       <y>310</y>
       <width>71</width>
       <height>23</height>
@@ -53,7 +59,7 @@
    <widget class="QPushButton" name="pushButton_4">
     <property name="geometry">
      <rect>
-      <x>258</x>
+      <x>318</x>
       <y>310</y>
       <width>71</width>
       <height>23</height>
@@ -66,7 +72,7 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>90</x>
       <y>310</y>
       <width>71</width>
       <height>23</height>
@@ -76,13 +82,23 @@
      <string>Add</string>
     </property>
    </widget>
+   <widget class="QTableView" name="tableView_2">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>10</y>
+      <width>441</width>
+      <height>291</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>360</width>
+     <width>911</width>
      <height>21</height>
     </rect>
    </property>
@@ -92,4 +108,3 @@
  <resources/>
  <connections/>
 </ui>
-

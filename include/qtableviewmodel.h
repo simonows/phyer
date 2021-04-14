@@ -2,7 +2,7 @@
 #define QTABLEVIEWMODEL_H
 
 
-#include <countryflag.h>
+#include <registerflag.h>
 #include <QModelIndex>
 
 class QTableViewModel : public QAbstractListModel
@@ -16,15 +16,15 @@ public:
 
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
 
-    void populate(QList<CountryFlag> *newValues);
+    void populate(QList<RegisterFlag> *newValues);
 
-    void append(CountryFlag value);
-    void update(int idx, CountryFlag value);
+    void append(RegisterFlag value);
+    void update(int idx, RegisterFlag value);
     void deleteRow(int idx);
-    void insertAt(int idx, CountryFlag value);
+    void insertAt(int idx, RegisterFlag value);
 
 private:
-    QList<CountryFlag> *values;
+    QList<RegisterFlag> *values;
 };
 
 #endif // QTABLEVIEWMODEL_H

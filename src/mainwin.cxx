@@ -7,14 +7,24 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    values = new QList<CountryFlag>;
+    values = new QList<RegisterFlag>;
 
-    values->append(CountryFlag(1," Russia", "russia.png"));
-    values->append(CountryFlag(11, "Belarus", "belarus.png"));
-    values->append(CountryFlag(22, "Slovakia", "slovakia.png"));
-    values->append(CountryFlag(33, "Slovenia", "slovenia.png"));
-    values->append(CountryFlag(44, "China", "china.png"));
-    values->append(CountryFlag(55, "Mongolia","mongolia.png"));
+    values->append(RegisterFlag(0,"Control", "", ""));
+    values->append(RegisterFlag(1, "Status", "", ""));
+    values->append(RegisterFlag(2, "PHY Identifier", "", ""));
+    values->append(RegisterFlag(3, "PHY Identifier", "", ""));
+    values->append(RegisterFlag(4, "Auto-Negotiation Advertisement", "", ""));
+    values->append(RegisterFlag(5, "Auto-Negotiation Link Partner Base Page Ability", "", ""));
+    values->append(RegisterFlag(6, "Auto-Negotiation Expansion", "", ""));
+    values->append(RegisterFlag(7, "Auto-Negotiation Next Page Transmit", "", ""));
+    values->append(RegisterFlag(8, "Auto-Negotiation Link Partner Received Next Page", "", ""));
+    values->append(RegisterFlag(9, "MASTER-SLAVE Control Register", "", ""));
+    values->append(RegisterFlag(10, "MASTER-SLAVE Status Register", "", ""));
+    values->append(RegisterFlag(11, "PSE Control register", "", ""));
+    values->append(RegisterFlag(12, "PSE/PD Status register", "", ""));
+    values->append(RegisterFlag(13, "Reserved", "", ""));
+    values->append(RegisterFlag(14, "Reserved", "", ""));
+    values->append(RegisterFlag(15, "Extended Status", "", ""));
 
     model = new QTableViewModel();
     model->populate(values);
@@ -33,12 +43,12 @@ void MainWindow::on_pushButton_clicked()
     newidx++;
     QString strIdx = QString().number(newidx);
 
-    model->append(CountryFlag(newidx, "new country " + strIdx, "russia.png"));
+    model->append(RegisterFlag(newidx, "Optional", "", ""));
 }
 
 void MainWindow::on_pushButton_2_clicked()
 {
-    model->update(ui->tableView->currentIndex().row(), CountryFlag(66, "Japan", "japan.png"));
+    model->update(ui->tableView->currentIndex().row(), RegisterFlag(16, "Optional", "", ""));
 }
 
 void MainWindow::on_pushButton_3_clicked()
@@ -48,6 +58,6 @@ void MainWindow::on_pushButton_3_clicked()
 
 void MainWindow::on_pushButton_4_clicked()
 {
-    model->insertAt(0, CountryFlag(66, "Japan", "japan.png"));
+    model->insertAt(0, RegisterFlag(16, "Optional", "", ""));
 }
 
