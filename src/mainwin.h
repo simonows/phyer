@@ -5,6 +5,9 @@
 #include <qtableviewmodel.h>
 
 #include <QMainWindow>
+#include <QComboBox>
+
+#include <hardware.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -15,9 +18,12 @@ class MainWindow: public QMainWindow
 {
     Q_OBJECT
 
+    Hardware hrd;
     Ui::MainWindow *ui;
-    QList<RegisterFlag> *values;
+    QList<RegisterFlag> values;
     QTableViewModel *model;
+    QTableViewModel *model_optional;
+    QComboBox *interface_model;
     int newidx;
 
 public:
@@ -25,10 +31,11 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_clicked();
-    void on_pushButton_3_clicked();
-    void on_pushButton_2_clicked();
-    void on_pushButton_4_clicked();
+    void on_pushButton_clicked(void);
+    void on_pushButton_3_clicked(void);
+    void on_editButton_clicked(void);
+    void on_pushButton_4_clicked(void);
+    void on_selectButton_clicked(void);
 
 };
 #endif // __MAINWIN_H__

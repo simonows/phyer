@@ -22,45 +22,49 @@ int QTableViewModel::columnCount(const QModelIndex &) const
 
 QVariant QTableViewModel::data( const QModelIndex &index, int role ) const
 {
-
     QVariant value;
 
-        switch ( role )
+    switch ( role )
+    {
+        case Qt::DisplayRole: //string
         {
-            case Qt::DisplayRole: //string
+            switch (index.column())
             {
-                switch (index.column()) {
-                    case 0: {
-                        value = this->values->at(index.row()).getId();
-                        break;
-                    }
-                    case 1: {
-                        value = this->values->at(index.row()).getName();
-                        break;
-                    }
-                    case 2: {
-                        value = this->values->at(index.row()).getValue();
-                        break;
-                    }
-                    case 3: {
-                        value = this->values->at(index.row()).getEvalue();
-                        break;
-                    }
-                }
+                case 0:
+                    value = this->values->at(index.row()).getId();
+                    break;
+                case 1:
+                    value = this->values->at(index.row()).getName();
+                    break;
+                case 2:
+                    value = this->values->at(index.row()).getValue();
+                    break;
+                case 3:
+                    value = this->values->at(index.row()).getEvalue();
+                    break;
             }
-            break;
-
-            case Qt::UserRole: //data
-            {
-                value = this->values->at(index.row()).getId();
-            }
-            break;
-
-            default:
-                break;
         }
+        break;
+
+        case Qt::UserRole: //data
+            value = this->values->at(index.row()).getId();
+            break;
+
+        default:
+            break;
+    }
 
     return value;
+}
+
+QString QTableViewModel::dataReg(const QModelIndex &index) const
+{
+    return this->values->at(index.row()).getValue();
+}
+
+unsigned long QTableViewModel::dataAddr(const QModelIndex &index) const
+{
+    return this->values->at(index.row()).getId();
 }
 
 QVariant QTableViewModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -80,13 +84,12 @@ QVariant QTableViewModel::headerData(int section, Qt::Orientation orientation, i
     return QVariant();
 }
 
-void QTableViewModel::populate(QList<RegisterFlag> *newValues)
+void QTableViewModel::populate(QList<RegisterFlag> newValues)
 {
-    int idx = this->values->count();
-    this->beginInsertRows(QModelIndex(), 1, idx);
-        this->values = newValues;
+    this->beginInsertRows(QModelIndex(), 1, newValues.count());
+        *this->values = newValues;
     endInsertRows();
- }
+}
 
 void QTableViewModel::append(RegisterFlag value)
 {
@@ -118,7 +121,6 @@ void QTableViewModel::deleteRow(int idx)
 
 void QTableViewModel::insertAt(int idx, RegisterFlag value)
 {
-
     int newRow = idx;
 
     this->beginInsertRows(QModelIndex(), newRow, newRow);
@@ -127,3 +129,4 @@ void QTableViewModel::insertAt(int idx, RegisterFlag value)
 
     endInsertRows();
 }
+
