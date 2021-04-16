@@ -1,8 +1,8 @@
-#include <qtableviewmodel.h>
-
 #include <QModelIndex>
 #include <QDebug>
 #include <QPixmap>
+
+#include <phyer/qtableviewmodel.h>
 
 QTableViewModel::QTableViewModel(QObject *parent)
     :QAbstractListModel(parent)

@@ -1,5 +1,5 @@
+#include <phyer/registerflag.h>
 
-#include <registerflag.h>
 
 RegisterFlag::RegisterFlag()
 {

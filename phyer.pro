@@ -19,11 +19,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 # Input
 HEADERS += include/countryflag.h \
+           include/phyer/hardware.h \
+           include/phyer/qtableviewmodel.h \
+           include/phyer/registerflag.h \
            include/qtableviewmodel.h \
            src/mainwin.h \
            build/phyer_autogen/res/ui_mainwindow.h
 FORMS += res/mainwindow.ui
 SOURCES += src/countryflag.cxx \
+    src/hardware.cxx \
            src/main.cxx \
            src/mainwin.cxx \
-           src/qtableviewmodel.cxx \
+           src/qtableviewmodel.cxx \ \
+    src/registerflag.cxx

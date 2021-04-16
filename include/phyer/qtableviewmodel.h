@@ -1,9 +1,10 @@
 #ifndef QTABLEVIEWMODEL_H
 #define QTABLEVIEWMODEL_H
 
-
-#include <registerflag.h>
 #include <QModelIndex>
+
+#include <phyer/registerflag.h>
+
 
 class QTableViewModel : public QAbstractListModel
 {

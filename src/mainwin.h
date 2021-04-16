@@ -1,13 +1,14 @@
 #ifndef __MAINWIN_H__
 #define __MAINWIN_H__
 
-#include <registerflag.h>
-#include <qtableviewmodel.h>
+#include <vector>
 
 #include <QMainWindow>
 #include <QComboBox>
 
-#include <hardware.h>
+#include <phyer/hardware.h>
+#include <phyer/qtableviewmodel.h>
+#include <phyer/registerflag.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -23,6 +24,7 @@ class MainWindow: public QMainWindow
     QList<RegisterFlag> values;
     QTableViewModel *model;
     QTableViewModel *model_optional;
+    QList<unsigned long> set_optional;
     QComboBox *interface_model;
     int newidx;
 
@@ -32,9 +34,8 @@ public:
 
 private slots:
     void on_pushButton_clicked(void);
-    void on_pushButton_3_clicked(void);
+    void on_deleteButton_clicked(void);
     void on_editButton_clicked(void);
-    void on_pushButton_4_clicked(void);
     void on_selectButton_clicked(void);
 
 };
