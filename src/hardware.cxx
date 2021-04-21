@@ -53,50 +53,32 @@ void Hardware::setItem(QString _item)
 
 typedef struct StdReg
 {
-    const size_t num;
-    const char *name;
     const unsigned long addr;
+    const char *name;
+    const char *status;
+    const char *desc;
 } StdReg;
 
-#ifndef _WIN32
+
 static struct StdReg const stdRegNames[] = {
-    {0, "Control", MII_BMCR}
-  , {1, "Status", MII_BMSR}
-  , {2, "PHY Identifier", MII_PHYSID1}
-  , {3, "PHY Identifier", MII_PHYSID2}
-  , {4, "Auto-Negotiation Advertisement", MII_ADVERTISE}
-  , {5, "Auto-Negotiation Link Partner Base Page Ability", MII_LPA}
-  , {6, "Auto-Negotiation Expansion", MII_EXPANSION}
-  , {7, "Auto-Negotiation Next Page Transmit", 7}
-  , {8, "Auto-Negotiation Link Partner Received Next Page", 8}
-  , {9, "1000BASE-T Control Register", MII_CTRL1000}
-  , {10, "1000BASE-T Status Register", MII_STAT1000}
-  , {11, "PSE Control register", MII_MMD_CTRL}
-  , {12, "PSE/PD Status register", MII_MMD_DATA}
-  , {13, "Reserved (MMD control)", MII_MMD_CTRL}
-  , {14, "Reserved (MMD data)", MII_MMD_DATA}
-  , {15, "Extended Status", MII_ESTATUS}
+    { 0, "Control", "rw", "desc1" }
+  , { 1, "Status", "ro", "desc2" }
+  , { 2, "PHY Identifier", "ro", "desc3" }
+  , { 3, "PHY Identifier", "ro", "desc4" }
+  , { 4, "Auto-Negotiation Advertisement", "rw", "desc5" }
+  , { 5, "Auto-Negotiation Link Partner Base Page Ability", "ro", "desc6" }
+  , { 6, "Auto-Negotiation Expansion", "rw", "desc7" }
+  , { 7, "Auto-Negotiation Next Page Transmit", "rw", "desc8" }
+  , { 8, "Auto-Negotiation Link Partner Received Next Page", "ro", "desc9" }
+  , { 9, "1000BASE-T Control Register", "rw", "desc10" }
+  , { 10, "1000BASE-T Status Register", "ro", "desc11" }
+  , { 11, "PSE Control register", "rw", "desc12" }
+  , { 12, "PSE/PD Status register", "ro", "desc13" }
+  , { 13, "Reserved (MMD control)", "rw", "desc14" }
+  , { 14, "Reserved (MMD data)", "ro", "desc15" }
+  , { 15, "Extended Status", "ro", "desc16" }
 };
-#else
-static struct StdReg const stdRegNames[] = {
-    {0, "Control", 0}
-  , {1, "Status", 1}
-  , {2, "PHY Identifier", 2}
-  , {3, "PHY Identifier", 3}
-  , {4, "Auto-Negotiation Advertisement", 4}
-  , {5, "Auto-Negotiation Link Partner Base Page Ability", 5}
-  , {6, "Auto-Negotiation Expansion", 6}
-  , {7, "Auto-Negotiation Next Page Transmit", 7}
-  , {8, "Auto-Negotiation Link Partner Received Next Page", 8}
-  , {9, "1000BASE-T Control Register", 9}
-  , {10, "1000BASE-T Status Register", 10}
-  , {11, "PSE Control register", 11}
-  , {12, "PSE/PD Status register", 12}
-  , {13, "Reserved (MMD control)", 13}
-  , {14, "Reserved (MMD data)", 14}
-  , {15, "Extended Status", 15}
-};
-#endif
+
 
 QList<RegisterFlag> Hardware::getRegisterSet(void)
 {
@@ -125,10 +107,11 @@ QList<RegisterFlag> Hardware::getRegisterSet(void)
             if (ioctl(fd, SIOCGMIIREG, &ifr) >= 0)
             {
                 set.append(RegisterFlag(
-                    stdRegNames[i].num
+                    stdRegNames[i].addr
                   , stdRegNames[i].name
                   , QString::asprintf("0x%04hX", mii->val_out)
-                  , ""
+                  , stdRegNames[i].status
+                  , stdRegNames[i].desc
                 ));
             }
         }

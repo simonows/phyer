@@ -31,7 +31,7 @@ QVariant QTableViewModel::data( const QModelIndex &index, int role ) const
             switch (index.column())
             {
                 case 0:
-                    value = this->values->at(index.row()).getId();
+                    value = QVariant::fromValue(this->values->at(index.row()).getId());
                     break;
                 case 1:
                     value = this->values->at(index.row()).getName();
@@ -47,7 +47,11 @@ QVariant QTableViewModel::data( const QModelIndex &index, int role ) const
         break;
 
         case Qt::UserRole: //data
-            value = this->values->at(index.row()).getId();
+            value = QVariant::fromValue(this->values->at(index.row()).getId());
+            break;
+
+        case Qt::ToolTipRole:
+            value = this->values->at(index.row()).getDesc();
             break;
 
         default:
@@ -72,13 +76,13 @@ QVariant QTableViewModel::headerData(int section, Qt::Orientation orientation, i
     if (role == Qt::DisplayRole && orientation == Qt::Horizontal) {
         switch (section) {
         case 0:
-            return QString("address");
+            return QString("addr");
         case 1:
             return QString("name");
         case 2:
-            return QString("MII");
+            return QString("val");
         case 3:
-            return QString("GMII");
+            return QString("type");
         }
     }
     return QVariant();

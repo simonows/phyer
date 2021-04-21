@@ -7,7 +7,7 @@ class RegisterFlag
 {
 public:
     RegisterFlag();
-    RegisterFlag(size_t id, QString name, QString value, QString evalue);
+    RegisterFlag(unsigned long id, QString name, QString value, QString evalue, QString desc);
     QString getValue() const;
     void setValue(const QString &value);
 
@@ -17,14 +17,17 @@ public:
     QString getName() const;
     void setName(const QString &value);
 
-    int getId() const;
-    void setId(int value);
+    unsigned long getId() const;
+    void setId(unsigned long value);
 
+    QString getDesc() const;
+    void setDesc(const QString &sti);
 private:
-    int id;
+    unsigned long id;
     QString value;
     QString evalue;
     QString name;
+    QString desc;
 };
 
 #endif // COUNTRYFLAG_H

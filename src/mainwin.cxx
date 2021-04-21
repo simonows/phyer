@@ -11,33 +11,35 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
-    values.append(RegisterFlag(0,"Control", "", ""));
-    values.append(RegisterFlag(1, "Status", "", ""));
-    values.append(RegisterFlag(2, "PHY Identifier", "", ""));
-    values.append(RegisterFlag(3, "PHY Identifier", "", ""));
-    values.append(RegisterFlag(4, "Auto-Negotiation Advertisement", "", ""));
-    values.append(RegisterFlag(5, "Auto-Negotiation Link Partner Base Page Ability", "", ""));
-    values.append(RegisterFlag(6, "Auto-Negotiation Expansion", "", ""));
-    values.append(RegisterFlag(7, "Auto-Negotiation Next Page Transmit", "", ""));
-    values.append(RegisterFlag(8, "Auto-Negotiation Link Partner Received Next Page", "", ""));
-    values.append(RegisterFlag(9, "MASTER-SLAVE Control Register", "", ""));
-    values.append(RegisterFlag(10, "MASTER-SLAVE Status Register", "", ""));
-    values.append(RegisterFlag(11, "PSE Control register", "", ""));
-    values.append(RegisterFlag(12, "PSE/PD Status register", "", ""));
-    values.append(RegisterFlag(13, "Reserved", "", ""));
-    values.append(RegisterFlag(14, "Reserved", "", ""));
-    values.append(RegisterFlag(15, "Extended Status", "", ""));
+    values.append(RegisterFlag(0,"Control", "", "", ""));
+    values.append(RegisterFlag(1, "Status", "", "", ""));
+    values.append(RegisterFlag(2, "PHY Identifier", "", "", ""));
+    values.append(RegisterFlag(3, "PHY Identifier", "", "", ""));
+    values.append(RegisterFlag(4, "Auto-Negotiation Advertisement", "", "", ""));
+    values.append(RegisterFlag(5, "Auto-Negotiation Link Partner Base Page Ability", "", "", ""));
+    values.append(RegisterFlag(6, "Auto-Negotiation Expansion", "", "", ""));
+    values.append(RegisterFlag(7, "Auto-Negotiation Next Page Transmit", "", "", ""));
+    values.append(RegisterFlag(8, "Auto-Negotiation Link Partner Received Next Page", "", "", ""));
+    values.append(RegisterFlag(9, "MASTER-SLAVE Control Register", "", "", ""));
+    values.append(RegisterFlag(10, "MASTER-SLAVE Status Register", "", "", ""));
+    values.append(RegisterFlag(11, "PSE Control register", "", "", ""));
+    values.append(RegisterFlag(12, "PSE/PD Status register", "", "", ""));
+    values.append(RegisterFlag(13, "Reserved", "", "", ""));
+    values.append(RegisterFlag(14, "Reserved", "", "", ""));
+    values.append(RegisterFlag(15, "Extended Status", "", "", ""));
 
     model = new QTableViewModel();
     model_optional = new QTableViewModel();
     model->populate(values);
     this->ui->tableView->setModel(model);
     this->ui->tableView->setColumnWidth(0, 50);
-    this->ui->tableView->setColumnWidth(1, 260);
+    this->ui->tableView->setColumnWidth(1, 310);
+    this->ui->tableView->setColumnWidth(3, 50);
 
     this->ui->tableView2->setModel(model_optional);
     this->ui->tableView2->setColumnWidth(0, 50);
-    this->ui->tableView2->setColumnWidth(1, 260);
+    this->ui->tableView2->setColumnWidth(1, 310);
+    this->ui->tableView2->setColumnWidth(3, 50);
 
     this->ui->interfaceComboBox->addItems(hrd.getItems());
 
@@ -89,6 +91,7 @@ void MainWindow::on_pushButton_clicked(void)
           , QString::asprintf("0x%04hX"
           , hrd.getRegisterValue(temp))
           , ""
+          , this->ui->lineEdit_4->text()
         )
     );
 }
