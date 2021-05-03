@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include "mainwin.h"
 #include "../res/ui_mainwindow.h"
+#include "regwin.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -29,25 +30,26 @@ MainWindow::MainWindow(QWidget *parent)
     values.append(RegisterFlag(15, "Extended Status", "", "", ""));
 
     model = new QTableViewModel();
-    model_optional = new QTableViewModel();
     model->populate(values);
     this->ui->tableView->setModel(model);
     this->ui->tableView->setColumnWidth(0, 50);
     this->ui->tableView->setColumnWidth(1, 310);
     this->ui->tableView->setColumnWidth(3, 50);
 
-    this->ui->tableView2->setModel(model_optional);
-    this->ui->tableView2->setColumnWidth(0, 50);
-    this->ui->tableView2->setColumnWidth(1, 310);
-    this->ui->tableView2->setColumnWidth(3, 50);
+    connect(this->ui->tableView,
+        SIGNAL(clicked(const QModelIndex &))
+      , this
+      , SLOT(handleOnTableClicked(const QModelIndex &))
+    );
 
     this->ui->interfaceComboBox->addItems(hrd.getItems());
 
     newidx = 100;
 
     this->ui->pushButton->setEnabled(false);
-    this->ui->editButton->setEnabled(false);
     this->ui->deleteButton->setEnabled(false);
+    this->ui->serializeButton->setEnabled(false);
+    this->ui->saveButton->setEnabled(false);
 
     QDesktopWidget desktop;
     QRect rect = desktop.availableGeometry(this);
@@ -59,6 +61,27 @@ MainWindow::MainWindow(QWidget *parent)
     move(center);
 }
 
+void MainWindow::handleOnTableClicked(const QModelIndex &index)
+{
+    if (!index.isValid())
+    {
+        return;
+    }
+
+    this->ui->descEdit->clear();
+    this->ui->descEdit->insertPlainText(model->values->at(index.row()).getDesc());
+}
+
+void MainWindow::on_saveButton_clicked(void)
+{
+    if (this->ui->tableView->currentIndex().isValid())
+    {
+        (*model->values)[this->ui->tableView->currentIndex().row()].setDesc(
+            this->ui->descEdit->toPlainText()
+        );
+    }
+}
+
 MainWindow::~MainWindow()
 {
     delete ui;
@@ -66,10 +89,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_pushButton_clicked(void)
 {
-    unsigned long temp = this->ui->lineEdit_2->text().toULong(nullptr, 10);
     QMessageBox box;
+    RegWindow dlg(this);
+    unsigned long temp = 0;
 
-    if (temp < 16 || temp > 31)
+    if (dlg.exec() != QDialog::Accepted)
+    {
+        return;
+    }
+
+    temp = dlg.getAddr();
+
+    if (temp < Hardware::getStdRegCount() || temp > Hardware::MAX_ADDR)
     {
         box.setText(QString::asprintf("Wrong address %lu value", temp));
         box.exec();
@@ -84,7 +115,35 @@ void MainWindow::on_pushButton_clicked(void)
     }
 
     set_optional.push_back(temp);
-    model_optional->append(
+
+    model->append(
+        RegisterFlag(
+            temp
+          , dlg.getName()
+          , QString::asprintf("0x%04hX", hrd.getRegisterValue(temp))
+          , dlg.getMode()
+          , dlg.getDesc()
+        )
+    );
+
+    /*unsigned long temp = this->ui->lineEdit_2->text().toULong(nullptr, 10);
+
+    if (temp < Hardware::getStdRegCount() || temp > Hardware::MAX_ADDR)
+    {
+        box.setText(QString::asprintf("Wrong address %lu value", temp));
+        box.exec();
+        return;
+    }
+
+    if (set_optional.indexOf(temp) != -1)
+    {
+        box.setText(QString::asprintf("Address %lu already exist", temp));
+        box.exec();
+        return;
+    }
+
+    set_optional.push_back(temp);
+    model->append(
         RegisterFlag(
             temp
           , this->ui->lineEdit_3->text()
@@ -93,10 +152,11 @@ void MainWindow::on_pushButton_clicked(void)
           , ""
           , this->ui->lineEdit_4->text()
         )
-    );
+    );*/
 }
 
-void MainWindow::on_editButton_clicked(void)
+
+void MainWindow::on_deleteButton_clicked(void)
 {
     if (ui->tableView->currentIndex().row() == -1)
     {
@@ -105,35 +165,15 @@ void MainWindow::on_editButton_clicked(void)
         msgBox.exec();
         return;
     }
-
-    hrd.setRegisterValue(
-        model->dataAddr(ui->tableView->currentIndex())
-      , static_cast<unsigned short>(
-            this->ui->lineEdit->text().toUShort(nullptr, 16)
-        )
-    );
-
-    QList<RegisterFlag> temp = hrd.getRegisterSet();
-    if (temp.count() > 0)
-    {
-        for (size_t i = values.count(); i > 0 ; i--)
-        {
-            model->deleteRow(i - 1);
-        }
-        model->populate(temp);
-    }
-}
-
-void MainWindow::on_deleteButton_clicked(void)
-{
-    if (ui->tableView2->currentIndex().row() == -1)
+    if (ui->tableView->currentIndex().row() < Hardware::getStdRegCount())
     {
         QMessageBox msgBox;
-        msgBox.setText("You should choose a row before");
+        msgBox.setText("You can't delete standard set of registers");
         msgBox.exec();
         return;
     }
-    model_optional->deleteRow(ui->tableView2->currentIndex().row());
+    set_optional.removeOne(model->dataAddr(ui->tableView->currentIndex()));
+    model->deleteRow(ui->tableView->currentIndex().row());
 }
 
 
@@ -150,15 +190,17 @@ void MainWindow::on_selectButton_clicked(void)
         msgBox.exec();
         this->ui->infoLabel->setText("Not enough roots for read interface");
         this->ui->pushButton->setEnabled(false);
-        this->ui->editButton->setEnabled(false);
         this->ui->deleteButton->setEnabled(false);
+        this->ui->serializeButton->setEnabled(false);
+        this->ui->saveButton->setEnabled(false);
         return;
     }
 
     this->ui->infoLabel->setText(this->ui->interfaceComboBox->currentText() + " selected");
     this->ui->pushButton->setEnabled(true);
-    this->ui->editButton->setEnabled(true);
     this->ui->deleteButton->setEnabled(true);
+    this->ui->serializeButton->setEnabled(true);
+    this->ui->saveButton->setEnabled(true);
 
     for (size_t i = values.count(); i > 0 ; i--)
     {

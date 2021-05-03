@@ -15,6 +15,7 @@
 #include <string>
 
 #include <phyer/hardware.h>
+#include <phyer/qtableviewmodel.h>
 
 Hardware::Hardware()
 {
@@ -186,5 +187,10 @@ unsigned short Hardware::getRegisterValue(unsigned long _addr)
 
 exit:
     return rc;
+}
+
+size_t Hardware::getStdRegCount()
+{
+    return sizeof(stdRegNames) / sizeof(struct StdReg);
 }
 

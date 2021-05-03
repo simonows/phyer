@@ -35,9 +35,9 @@ QString RegisterFlag::getEvalue() const
     return evalue;
 }
 
-void RegisterFlag::setEvalue(const QString &value)
+void RegisterFlag::setEvalue(const QString &_evalue)
 {
-    this->evalue = evalue;
+    this->evalue = _evalue;
 }
 
 QString RegisterFlag::getName() const

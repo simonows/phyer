@@ -11,7 +11,6 @@
 #endif
 
 #include <phyer/registerflag.h>
-#include <phyer/qtableviewmodel.h>
 
 
 class Hardware
@@ -28,11 +27,14 @@ public:
     Hardware();
     ~Hardware();
 
+    static size_t getStdRegCount();
     QStringList getItems(void);
     void setItem(QString _item);
     QList<RegisterFlag> getRegisterSet(void);
     int setRegisterValue(unsigned long addr, unsigned short value);
     unsigned short getRegisterValue(unsigned long _addr);
+
+    static unsigned long const MAX_ADDR = 31;
 };
 #endif // __HARDWARE_H__
 

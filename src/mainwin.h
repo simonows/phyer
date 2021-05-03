@@ -23,7 +23,6 @@ class MainWindow: public QMainWindow
     Ui::MainWindow *ui;
     QList<RegisterFlag> values;
     QTableViewModel *model;
-    QTableViewModel *model_optional;
     QList<unsigned long> set_optional;
     QComboBox *interface_model;
     int newidx;
@@ -35,8 +34,9 @@ public:
 private slots:
     void on_pushButton_clicked(void);
     void on_deleteButton_clicked(void);
-    void on_editButton_clicked(void);
     void on_selectButton_clicked(void);
+    void on_saveButton_clicked(void);
+    void handleOnTableClicked(const QModelIndex &index);
 
 };
 #endif // __MAINWIN_H__

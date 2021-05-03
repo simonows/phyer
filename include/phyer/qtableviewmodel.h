@@ -3,13 +3,16 @@
 
 #include <QModelIndex>
 
-#include <phyer/registerflag.h>
+#include <phyer/hardware.h>
 
 
 class QTableViewModel : public QAbstractListModel
 {
+    Hardware *hrdw;
+
 public:
-    QTableViewModel(QObject *parent=nullptr);
+    QList<RegisterFlag> *values;
+    QTableViewModel(Hardware *_hrdw = nullptr);
     int rowCount(const QModelIndex &) const;
     int columnCount(const QModelIndex &parent) const;
 
@@ -25,9 +28,13 @@ public:
     void update(int idx, RegisterFlag value);
     void deleteRow(int idx);
     void insertAt(int idx, RegisterFlag value);
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 
-private:
-    QList<RegisterFlag> *values;
+    bool setData(
+        const QModelIndex &index
+      , const QVariant &value
+      , int role = Qt::EditRole
+    );
 };
 
 #endif // QTABLEVIEWMODEL_H

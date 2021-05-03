@@ -24,11 +24,14 @@ HEADERS += include/countryflag.h \
            include/phyer/registerflag.h \
            include/qtableviewmodel.h \
            src/mainwin.h \
-           build/phyer_autogen/res/ui_mainwindow.h
-FORMS += res/mainwindow.ui
+           build/phyer_autogen/res/ui_mainwindow.h \
+           src/regwin.h
+FORMS += res/mainwindow.ui \
+    res/regwindow.ui
 SOURCES += src/countryflag.cxx \
     src/hardware.cxx \
            src/main.cxx \
            src/mainwin.cxx \
            src/qtableviewmodel.cxx \ \
-    src/registerflag.cxx
+    src/registerflag.cxx \
+    src/regwin.cxx
