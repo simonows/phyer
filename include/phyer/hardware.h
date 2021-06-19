@@ -17,9 +17,11 @@ class Hardware
 {
 #ifndef _WIN32
     struct ifreq ifr;
-    struct ifaddrs *addrs,*tmp;
+    struct ifaddrs *addrs, *tmp;
 #endif
 
+    QList<RegisterFlag> des(QString item);
+    void ser(QString name, QList<RegisterFlag> items);
     QString selected_item;
     QStringList items;
 
@@ -27,10 +29,11 @@ public:
     Hardware();
     ~Hardware();
 
+    void updatePage(int page, QList<RegisterFlag> items);
     static size_t getStdRegCount();
     QStringList getItems(void);
     void setItem(QString _item);
-    QList<RegisterFlag> getRegisterSet(void);
+    QList<RegisterFlag> getRegisterSet(int dev, int page);
     int setRegisterValue(unsigned long addr, unsigned short value);
     unsigned short getRegisterValue(unsigned long _addr);
 

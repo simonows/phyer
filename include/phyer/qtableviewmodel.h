@@ -11,6 +11,7 @@ class QTableViewModel : public QAbstractListModel
     Hardware *hrdw;
 
 public:
+    int page;
     QList<RegisterFlag> *values;
     QTableViewModel(Hardware *_hrdw = nullptr);
     int rowCount(const QModelIndex &) const;

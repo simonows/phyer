@@ -26,6 +26,7 @@ class MainWindow: public QMainWindow
     QList<unsigned long> set_optional;
     QComboBox *interface_model;
     int newidx;
+    bool is_selected;
 
 public:
     MainWindow(QWidget *parent = nullptr);

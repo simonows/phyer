@@ -10,6 +10,7 @@ QTableViewModel::QTableViewModel(Hardware *_hrdw)
 {
     values = new QList<RegisterFlag>();
     hrdw = _hrdw;
+    page = 0;
 }
 
 int QTableViewModel::rowCount(const QModelIndex &) const
@@ -101,16 +102,11 @@ bool QTableViewModel::setData(
             return false;
         }
 
-        if (hrdw)
-        {
-            hrdw->setRegisterValue(this->values->at(index.row()).getId(), temp_value);
-            temp_value = hrdw->getRegisterValue(
-                this->values->at(index.row()).getId()
-            );
-            (*this->values)[index.row()].setValue(
-                QString::asprintf("0x%04hX", temp_value)
-            );
-        }
+        (*this->values)[index.row()].setValue(
+            QString::asprintf("0x%04hX", temp_value)
+        );
+        //this->values->removeLast();
+        hrdw->updatePage(page, *(this->values));
     }
     if (index.column() == 3)
     {
@@ -121,6 +117,7 @@ bool QTableViewModel::setData(
             );
         }
     }
+
     return true;
 }
 
@@ -153,7 +150,7 @@ QVariant QTableViewModel::headerData(int section, Qt::Orientation orientation, i
 
 void QTableViewModel::populate(QList<RegisterFlag> newValues)
 {
-    this->beginInsertRows(QModelIndex(), 1, newValues.count());
+    this->beginInsertRows(QModelIndex(), 0, newValues.count());
         *this->values = newValues;
     endInsertRows();
 }

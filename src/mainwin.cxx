@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent)
     values.append(RegisterFlag(14, "Reserved", "", "", ""));
     values.append(RegisterFlag(15, "Extended Status", "", "", ""));
 
-    model = new QTableViewModel();
+    model = new QTableViewModel(&hrd);
     model->populate(values);
     this->ui->tableView->setModel(model);
     this->ui->tableView->setColumnWidth(0, 50);
@@ -41,7 +41,35 @@ MainWindow::MainWindow(QWidget *parent)
       , this
       , SLOT(handleOnTableClicked(const QModelIndex &))
     );
+    connect(this->ui->pageComboBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        [=](int index)
+        {
+            if (!is_selected)
+            {
+                return;
+            }
+            for (size_t i = values.count(); i > 0 ; i--)
+            {
+                model->deleteRow(i - 1);
+            }
 
+            QList<RegisterFlag> temp = hrd.getRegisterSet(this->ui->interfaceComboBox->currentIndex(), index);
+            model->populate(temp);
+            model->page = index;
+            values = temp;
+        }
+    );
+
+    QStringList pages;
+    for (int i = 0; i < 5; i++)
+    {
+        if (i == 11 || i == 12 || i == 17)
+        {
+            continue;
+        }
+        pages << QString::asprintf("%i", i);
+    }
+    this->ui->pageComboBox->addItems(pages);
     this->ui->interfaceComboBox->addItems(hrd.getItems());
 
     newidx = 100;
@@ -59,6 +87,12 @@ MainWindow::MainWindow(QWidget *parent)
     center.setX(x);
     center.setY(y);
     move(center);
+    setWindowFlags(Qt::Dialog | Qt::MSWindowsFixedSizeDialogHint);
+    is_selected = false;
+}
+
+void currentIndexChanged(int index)
+{
 }
 
 void MainWindow::handleOnTableClicked(const QModelIndex &index)
@@ -79,6 +113,7 @@ void MainWindow::on_saveButton_clicked(void)
         (*model->values)[this->ui->tableView->currentIndex().row()].setDesc(
             this->ui->descEdit->toPlainText()
         );
+        hrd.updatePage(this->ui->pageComboBox->currentIndex(), *(this->model->values));
     }
 }
 
@@ -125,34 +160,7 @@ void MainWindow::on_pushButton_clicked(void)
           , dlg.getDesc()
         )
     );
-
-    /*unsigned long temp = this->ui->lineEdit_2->text().toULong(nullptr, 10);
-
-    if (temp < Hardware::getStdRegCount() || temp > Hardware::MAX_ADDR)
-    {
-        box.setText(QString::asprintf("Wrong address %lu value", temp));
-        box.exec();
-        return;
-    }
-
-    if (set_optional.indexOf(temp) != -1)
-    {
-        box.setText(QString::asprintf("Address %lu already exist", temp));
-        box.exec();
-        return;
-    }
-
-    set_optional.push_back(temp);
-    model->append(
-        RegisterFlag(
-            temp
-          , this->ui->lineEdit_3->text()
-          , QString::asprintf("0x%04hX"
-          , hrd.getRegisterValue(temp))
-          , ""
-          , this->ui->lineEdit_4->text()
-        )
-    );*/
+    hrd.updatePage(this->ui->pageComboBox->currentIndex(), *(this->model->values));
 }
 
 
@@ -181,7 +189,7 @@ void MainWindow::on_selectButton_clicked(void)
 {
     hrd.setItem(this->ui->interfaceComboBox->currentText());
 
-    QList<RegisterFlag> temp = hrd.getRegisterSet();
+    QList<RegisterFlag> temp = hrd.getRegisterSet(0, 0);
 
     if (temp.count() <= 0)
     {
@@ -208,5 +216,6 @@ void MainWindow::on_selectButton_clicked(void)
     }
 
     model->populate(temp);
+    is_selected = true;
 }
 
