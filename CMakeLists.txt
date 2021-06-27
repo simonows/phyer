@@ -14,6 +14,7 @@ endif()
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 file(GLOB SOURCES src/*.cxx)
 

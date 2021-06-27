@@ -1,5 +1,5 @@
 #include "regwin.h"
-#include "../res/ui_regwindow.h"
+#include "../ui_regwindow.h"
 
 RegWindow::RegWindow(QWidget* parent) : QDialog(parent), ui(new Ui::RegWindow)
 {

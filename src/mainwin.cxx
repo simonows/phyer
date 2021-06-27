@@ -2,7 +2,7 @@
 #include <QDesktopWidget>
 #include <QMessageBox>
 #include "mainwin.h"
-#include "../res/ui_mainwindow.h"
+#include "../ui_mainwindow.h"
 #include "regwin.h"
 
 
