@@ -1,6 +1,7 @@
 #include <QStyle>
 #include <QDesktopWidget>
 #include <QMessageBox>
+#include <QSettings>
 #include "mainwin.h"
 #include "../ui_mainwindow.h"
 #include "regwin.h"
@@ -61,9 +62,9 @@ MainWindow::MainWindow(QWidget *parent)
     );
 
     QStringList pages;
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 8; i++)
     {
-        if (i == 11 || i == 12 || i == 17)
+        if (i == 2 || i == 3 || i == 6)
         {
             continue;
         }
@@ -76,7 +77,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     this->ui->pushButton->setEnabled(false);
     this->ui->deleteButton->setEnabled(false);
-    this->ui->serializeButton->setEnabled(false);
     this->ui->saveButton->setEnabled(false);
 
     QDesktopWidget desktop;
@@ -166,6 +166,7 @@ void MainWindow::on_pushButton_clicked(void)
 
 void MainWindow::on_deleteButton_clicked(void)
 {
+    QSettings settings("settings.ini", QSettings::IniFormat);
     if (ui->tableView->currentIndex().row() == -1)
     {
         QMessageBox msgBox;
@@ -173,13 +174,15 @@ void MainWindow::on_deleteButton_clicked(void)
         msgBox.exec();
         return;
     }
-    if (ui->tableView->currentIndex().row() < Hardware::getStdRegCount())
+    /*if (ui->tableView->currentIndex().row() < Hardware::getStdRegCount())
     {
         QMessageBox msgBox;
         msgBox.setText("You can't delete standard set of registers");
         msgBox.exec();
         return;
-    }
+    }*/
+    settings.remove(QString::asprintf("%s_%d.db/%d",
+this->ui->interfaceComboBox->currentText().toLocal8Bit().data(), model->page, ui->tableView->currentIndex().row() + 1));
     set_optional.removeOne(model->dataAddr(ui->tableView->currentIndex()));
     model->deleteRow(ui->tableView->currentIndex().row());
 }
@@ -199,7 +202,6 @@ void MainWindow::on_selectButton_clicked(void)
         this->ui->infoLabel->setText("Not enough roots for read interface");
         this->ui->pushButton->setEnabled(false);
         this->ui->deleteButton->setEnabled(false);
-        this->ui->serializeButton->setEnabled(false);
         this->ui->saveButton->setEnabled(false);
         return;
     }
@@ -207,7 +209,6 @@ void MainWindow::on_selectButton_clicked(void)
     this->ui->infoLabel->setText(this->ui->interfaceComboBox->currentText() + " selected");
     this->ui->pushButton->setEnabled(true);
     this->ui->deleteButton->setEnabled(true);
-    this->ui->serializeButton->setEnabled(true);
     this->ui->saveButton->setEnabled(true);
 
     for (size_t i = values.count(); i > 0 ; i--)

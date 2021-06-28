@@ -18,6 +18,8 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QSettings>
+#include <QCoreApplication>
 
 #include <phyer/hardware.h>
 #include <phyer/qtableviewmodel.h>
@@ -188,7 +190,25 @@ static struct StdReg const **devs[] = {
 
 void Hardware::ser(QString name, QList<RegisterFlag> items)
 {
-    QFile file(name);
+    QCoreApplication::setOrganizationName("MySoft");
+    QCoreApplication::setOrganizationDomain("mysoft.com");
+    QCoreApplication::setApplicationName("MDIO Register Set");
+    QSettings settings("settings.ini", QSettings::IniFormat);
+    settings.beginWriteArray(name);
+
+    for (int i = 0; i < items.size(); ++i)
+    {
+        settings.setArrayIndex(i);
+        settings.setValue("id", QVariant::fromValue(items[i].getId()));
+        settings.setValue("name", items[i].getName());
+        settings.setValue("value", items[i].getValue());
+        settings.setValue("evalue", items[i].getEvalue());
+        settings.setValue("desc", items[i].getDesc());
+    }
+
+    settings.endArray();
+
+    /*QFile file(name);
     file.open(QIODevice::WriteOnly);
     QTextStream writeStream(&file);
 
@@ -203,19 +223,41 @@ void Hardware::ser(QString name, QList<RegisterFlag> items)
         );
     }
 
-    file.close();
+    file.close();*/
 }
 
 QList<RegisterFlag> Hardware::des(QString item)
 {
+    QCoreApplication::setOrganizationName("MySoft");
+    QCoreApplication::setOrganizationDomain("mysoft.com");
+    QCoreApplication::setApplicationName("MDIO Register Set");
     QList<RegisterFlag> set;
-    char buffer[10240] = { 0 };
-    char *temp = nullptr;
-    unsigned long id = 0;
+    QSettings settings("settings.ini", QSettings::IniFormat);
     QString value;
     QString evalue;
     QString name;
     QString desc;
+    unsigned long id = 0;
+
+    int size = settings.beginReadArray(item);
+    for (int i = 0; i < size; ++i)
+    {
+        settings.setArrayIndex(i);
+        id = settings.value("id").toInt();
+        name = settings.value("name").toString();
+        if (name.size() == 0)
+        {
+            continue;
+        }
+        value = settings.value("value").toString();
+        evalue = settings.value("evalue").toString();
+        desc = settings.value("desc").toString();
+        set.append(RegisterFlag(id, name, value, evalue, desc));
+    }
+    settings.endArray();
+/*
+    char buffer[10240] = { 0 };
+    char *temp = nullptr;
 
     ifstream file(item.toStdString());
     if (!file.is_open())
@@ -243,7 +285,7 @@ QList<RegisterFlag> Hardware::des(QString item)
         set.append(RegisterFlag(id, name, value, evalue, desc));
         id++;
     }
-    file.close();
+    file.close();*/
 
 exit:
     return set;

@@ -27,7 +27,9 @@ HEADERS += include/countryflag.h \
            build/phyer_autogen/res/ui_mainwindow.h \
            src/regwin.h
 FORMS += res/mainwindow.ui \
-    res/regwindow.ui
+    res/regwindow.ui \
+    src/mainwindow.ui \
+    src/regwindow.ui
 SOURCES += src/countryflag.cxx \
     src/hardware.cxx \
            src/main.cxx \
